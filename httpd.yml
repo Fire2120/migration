@@ -1,0 +1,8 @@
+---
+- name: Install and configure Apache on RHEL servers
+  hosts: all
+  become: true
+  gather_facts: true
+
+  roles:
+    - httpd

@@ -1,0 +1,40 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for roles/httpd
+
+- name: Install Apache HTTP Server
+  ansible.builtin.dnf:
+    name: "{{ httpd_package }}"
+    state: present
+
+- name: Deploy custom index page
+  ansible.builtin.template:
+    src: index.html.j2
+    dest: "{{ httpd_document_root }}/index.html"
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart httpd
+
+- name: Start and enable Apache
+  ansible.builtin.service:
+    name: "{{ httpd_service }}"
+    state: started
+    enabled: true
+
+- name: Allow HTTP through firewalld
+  ansible.posix.firewalld:
+    port: "{{ httpd_port }}/tcp"
+    permanent: true
+    immediate: true
+    state: enabled
+  when: ansible_facts.services['firewalld.service'] is defined
+
+- name: Verify Apache is responding
+  ansible.builtin.uri:
+    url: "http://127.0.0.1:{{ httpd_port }}"
+    status_code: 200
+  register: httpd_check
+  retries: 5
+  delay: 2
+  until: httpd_check.status == 200
