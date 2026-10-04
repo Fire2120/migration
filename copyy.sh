@@ -6,4 +6,4 @@
     copy:
       src: /home/kayaato/automationlab/test.txt
       dest: /tmp
-      mode: 0644
+      #mode: 0644
