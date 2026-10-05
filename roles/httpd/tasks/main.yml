@@ -4,13 +4,13 @@
 
 - name: Install Apache HTTP Server
   ansible.builtin.dnf:
-    name: "{{ httpd_package }}"
+    name: httpd
     state: present
 
 - name: Deploy custom index page
   ansible.builtin.template:
     src: index.html.j2
-    dest: "{{ httpd_document_root }}/index.html"
+    dest: /index.html"
     owner: root
     group: root
     mode: '0644'
@@ -18,13 +18,13 @@
 
 - name: Start and enable Apache
   ansible.builtin.service:
-    name: "{{ httpd_service }}"
+    name: httpd
     state: started
     enabled: true
 
 - name: Allow HTTP through firewalld
   ansible.posix.firewalld:
-    port: "{{ httpd_port }}/tcp"
+    port: 80/tcp
     permanent: true
     immediate: true
     state: enabled
@@ -32,7 +32,7 @@
 
 - name: Verify Apache is responding
   ansible.builtin.uri:
-    url: "http://127.0.0.1:{{ httpd_port }}"
+    url: http://127.0.0.1:80
     status_code: 200
   register: httpd_check
   retries: 5
