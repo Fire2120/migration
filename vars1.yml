@@ -1,0 +1,68 @@
+---
+- name: Fun experiment with vars
+  hosts: test
+  vars:
+    satellite: sputnik
+    compass:
+      north
+      east
+      south
+      west
+    planets:
+      - Mercury
+      - Venus
+      - Earth
+      - Mars
+      - Jupiter
+      - Saturn
+      - Uranus
+      - Neptune
+      - Pluto
+    compliment:
+      - you
+      - are
+      - cool
+    outer_space:
+      presure: low
+      radiation: high
+      is_cold: true
+      objects:
+        sun:
+          is_cold: false
+    user_info:
+      - name: bear
+        shell: /bin/bash
+      - name: Zebra
+        shell: /bin/zsh
+      - name: snake
+        shell: /usr/bin/python
+      - name: mosquito
+        shell: /usr/sbin/nologin
+  tasks:
+    - name: Print hello
+      ansible.builtin.debug:
+        msg: Hello world!
+
+    - name: Show satellite
+      ansible.builtin.debug:
+        var: satellite
+
+    - name: Show compass
+      ansible.builtin.debug:
+        msg: "{{ compass }}"
+
+    - name: Show Jupiter
+      ansible.builtin.debug:
+        var: planets[4]
+
+    - name: Show radiation
+      ansible.builtin.debug:
+        var: outer_space['radiation']
+
+    - name: Show sun temperature
+      ansible.builtin.debug:
+        var: outer_space.objects.sun.is_cold
+
+    - name: Show user name
+      ansible.builtin.debug:
+        msg: "{{ user_info[2]['name'] }}"
